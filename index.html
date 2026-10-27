@@ -156,7 +156,6 @@
   }
   .signup-link:hover { text-decoration: underline; }
 
-  /* Loading spinner */
   .spinner {
     display: inline-block; width: 1rem; height: 1rem;
     border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
@@ -193,7 +192,6 @@
     </h1>
     <p class="subtitle">Cryptographically secure credentials — nothing leaves your browser</p>
 
-    <!-- Settings toggle -->
     <button class="settings-toggle" @click="showSettings = !showSettings">
       ⚙️ {{ showSettings ? 'Hide' : 'Show' }} Settings
       <span :class="['chevron', { rotated: showSettings }]">▼</span>
@@ -233,19 +231,17 @@
       </div>
     </transition>
 
-    <!-- Generate button -->
     <button class="generate-btn" @click="generateAccounts" :disabled="isGenerating">
       <span v-if="isGenerating" class="spinner"></span>
       <span v-else>✨</span>
       {{ isGenerating ? 'Generating…' : 'Generate' }}
     </button>
 
-    <!-- Results -->
     <transition-group name="fade" tag="div">
       <div v-if="accounts.length" key="results" class="results-wrapper">
         <div class="results-actions">
           <button class="action-btn" @click="copyAll">📋 Copy All</button>
-          <button class="action-btn" @click="exportCSV">⬇️ Export CSV</button>
+          <button class="action-btn" @click="exportTXT">⬇️ Export TXT</button>
           <button class="action-btn danger" @click="clearAccounts">🗑️ Clear</button>
         </div>
         <div class="results">
@@ -279,7 +275,6 @@
       </div>
     </transition-group>
 
-    <!-- Alerts -->
     <transition-group name="fade">
       <div v-if="status === 'success'" key="success" class="alert success">
         ✓ <div><strong>Success!</strong> {{ successMessage }}</div>
@@ -291,7 +286,6 @@
       </div>
     </transition-group>
 
-    <!-- Footer -->
     <footer class="footer">
       <p class="security-note">🔒 All generation runs locally — zero network calls.</p>
       <a
@@ -506,7 +500,7 @@ createApp({
     const copyAll = async () => {
       try {
         const text = accounts.value
-          .map((a, i) => `#${i + 1}\nUsername: ${a.username}\nPassword: ${a.password}`)
+          .map(a => `Username: ${a.username}\nPassword: ${a.password}`)
           .join('\n\n');
         await navigator.clipboard.writeText(text);
         status.value = 'success';
@@ -517,20 +511,21 @@ createApp({
       }
     };
 
-    const exportCSV = () => {
-      const csv = 'Username,Password\n' +
-        accounts.value.map(a => `${a.username},${a.password}`).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const exportTXT = () => {
+      const text = accounts.value
+        .map(a => `Username: ${a.username}\nPassword: ${a.password}`)
+        .join('\n\n');
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `roblox-alts-${Date.now()}.csv`;
+      link.download = `roblox-alts-${Date.now()}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
       status.value = 'success';
-      successMessage.value = 'CSV exported.';
+      successMessage.value = 'TXT exported.';
     };
 
     const clearAccounts = () => {
@@ -541,10 +536,10 @@ createApp({
     return {
       accounts, batchSize, passwordLength, usernameStyle, includeSymbols,
       showSettings, isGenerating, status, successMessage, errorMessage,
-      generateAccounts, copyAccount, copyAll, exportCSV, clearAccounts, resetStatus,
+      generateAccounts, copyAccount, copyAll, exportTXT, clearAccounts, resetStatus,
     };
   }
 }).mount('#app');
 </script>
 </body>
-</html>
+           </html>
