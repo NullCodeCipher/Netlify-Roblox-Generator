@@ -203,7 +203,7 @@
           <div class="setting-item">
             <label>Accounts</label>
             <select v-model.number="batchSize" class="select">
-              <option v-for="n in [1,3,5,10,25,50]" :key="n" :value="n">{{ n }}</option>
+              <option v-for="n in [1,3,5,10,25,50,75,100,250,500]" :key="n" :value="n">{{ n }}</option>
             </select>
           </div>
           <div class="setting-item">
@@ -542,4 +542,4 @@ createApp({
 }).mount('#app');
 </script>
 </body>
-           </html>
+       </html>
